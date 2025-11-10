@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Card</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #ffffff; padding: 20px; }
+        .card-content { text-align: center; }
+        .card-icon { font-size: 48px; margin-bottom: 16px; }
+        .card-title { font-size: 20px; font-weight: 600; color: #33475b; margin-bottom: 8px; }
+        .card-description { font-size: 14px; color: #7c98b6; margin-bottom: 24px; line-height: 1.5; }
+        .book-button { background: #ff7a59; color: white; border: none; padding: 12px 32px; font-size: 16px; font-weight: 600; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(255, 122, 89, 0.2); }
+        .book-button:hover { background: #ff6a45; transform: translateY(-1px); box-shadow: 0 4px 8px rgba(255, 122, 89, 0.3); }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); }
+        .modal.active { display: flex; align-items: center; justify-content: center; }
+        .modal-content { background-color: #ffffff; border-radius: 12px; width: 90%; max-width: 800px; height: 85vh; max-height: 700px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); display: flex; flex-direction: column; overflow: hidden; }
+        .modal-header { padding: 20px 24px; border-bottom: 1px solid #e3e8ec; display: flex; justify-content: space-between; align-items: center; background: #f5f8fa; }
+        .modal-title { font-size: 18px; font-weight: 600; color: #33475b; }
+        .close-button { background: none; border: none; font-size: 28px; color: #7c98b6; cursor: pointer; padding: 0; width: 32px; height: 32px; border-radius: 4px; transition: all 0.2s ease; }
+        .close-button:hover { background: #e3e8ec; color: #33475b; }
+        .modal-body { flex: 1; overflow: hidden; position: relative; }
+        .meeting-frame { width: 100%; height: 100%; border: none; }
+        .loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #7c98b6; text-align: center; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #e3e8ec; border-top-color: #ff7a59; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="card-content">
+        <div class="card-icon">📅</div>
+        <h2 class="card-title">Schedule a Meeting</h2>
+        <p class="card-description">Book a time that works best for you.</p>
+        <button class="book-button" onclick="openModal()">Book a Meeting</button>
+    </div>
+    <div id="meetingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">📅 Select Your Meeting Time</h3>
+                <button class="close-button" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="loadingIndicator" class="loading"><div class="spinner"></div><p>Loading...</p></div>
+                <iframe id="meetingFrame" class="meeting-frame" style="display: none;"></iframe>
+            </div>
+        </div>
+    </div>
+    <script>
+        const MEETING_LINK = 'https://meetings-eu1.hubspot.com/josiah-dalisay';
+        function openModal() {
+            const modal = document.getElementById('meetingModal');
+            const iframe = document.getElementById('meetingFrame');
+            const loading = document.getElementById('loadingIndicator');
+            modal.classList.add('active');
+            if (!iframe.src) {
+                iframe.src = MEETING_LINK;
+                iframe.onload = function() { loading.style.display = 'none'; iframe.style.display = 'block'; };
+            } else { loading.style.display = 'none'; iframe.style.display = 'block'; }
+            document.body.style.overflow = 'hidden';
+        }
+        function closeModal() { document.getElementById('meetingModal').classList.remove('active'); document.body.style.overflow = ''; }
+        window.onclick = function(event) { if (event.target === document.getElementById('meetingModal')) closeModal(); }
+        document.addEventListener('keydown', function(event) { if (event.key === 'Escape') closeModal(); });
+    </script>
+</body>
+</html>
